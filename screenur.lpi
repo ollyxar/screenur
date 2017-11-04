@@ -25,7 +25,7 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="2"/>
-      <RevisionNr Value="4"/>
+      <RevisionNr Value="5"/>
       <StringTable CompanyName="© Oleksii Svyrydenko" FileDescription="Screenur - fastest way to share your screenshots" LegalCopyright="© Oleksii Svyrydenko" ProductName="Screenur" ProductVersion=""/>
     </VersionInfo>
     <BuildModes Count="1">

@@ -12,7 +12,7 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  LCLVersion = '1.6.0.4'
+  LCLVersion = '1.8.2.0'
   Visible = True
   object ToolsPnl: TPanel
     Left = 32

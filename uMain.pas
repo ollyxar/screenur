@@ -258,9 +258,11 @@ var
       resclr := Canvas.Pixels[round(y), round(x)]
     else
       resclr := Canvas.Pixels[round(x), round(y)];
+
     resclr := RGB(round(GetRValue(resclr) * (1 - c) + GetRValue(LineColor) * c),
       round(GetGValue(resclr) * (1 - c) + GetGValue(LineColor) * c),
       round(GetBValue(resclr) * (1 - c) + GetBValue(LineColor) * c));
+
     if swapped then
       Canvas.Pixels[round(y), round(x)] := resclr
     else
@@ -285,9 +287,7 @@ var
   x1, x2, y1, y2, dx, dy, gradient, xend, yend, xgap, xpxl1, ypxl1,
   xpxl2, ypxl2, intery: real;
   x: integer;
-
 begin
-
   x1 := AX1;
   x2 := AX2;
   y1 := AY1;
@@ -296,12 +296,14 @@ begin
   dx := x2 - x1;
   dy := y2 - y1;
   swapped := abs(dx) < abs(dy);
+
   if swapped then
   begin
     swap(x1, y1);
     swap(x2, y2);
     swap(dx, dy);
   end;
+
   if x2 < x1 then
   begin
     swap(x1, x2);
@@ -309,8 +311,8 @@ begin
   end;
 
   if dx = 0 then dx := 0.000000001;
-  gradient := dy / dx;
 
+  gradient := dy / dx;
   xend := round(x1);
   yend := y1 + gradient * (xend - x1);
   xgap := rfrac(x1 + 0.5);
@@ -334,7 +336,6 @@ begin
     plot(x, floor(intery) + 1, frac(intery));
     intery := intery + gradient;
   end;
-
 end;
 
 { TTools }
@@ -443,8 +444,11 @@ begin
   {$ENDIF}
   {$IFDEF UNIX}
   UploadProcess;
+
   if Link <> '' then
     MyModalProcess;
+
+  TrayIcon1.Icons.Clear;
   {$ENDIF}
 end;
 
@@ -488,6 +492,7 @@ begin
       TextOut(TextPnl.Left + Memo1.Left + TextWidth('s'), TextPnl.Top + Memo1.Top + 2 + i *
         (trunc(FontSizeEdit.Value * 1.8)), Memo1.Lines[i]);
   end;
+
   History.Add(B);
   B.Free;
   Memo1.Clear;
@@ -506,15 +511,18 @@ var
 begin
   MyMouse.x := Mouse.CursorPos.X;
   MyMouse.y := Mouse.CursorPos.Y;
+
   if n > -1 then
     CurrentMonitor := Screen.Monitors[n]
   else
     CurrentMonitor := Screen.MonitorFromPoint(MyMouse);
 
   DC := GetDC(0);
+
   try
     C := TCanvas.Create;
     B := TBitmap.Create;
+
     try
       R := CurrentMonitor.BoundsRect;
       MainImage.Width := R.Right - R.Left;
@@ -549,6 +557,7 @@ begin
           tmp_img.Colors[x, y] := Overlay(tmp_img.Colors[x, y]);
         end;
       end;
+
       tmp_img.CreateBitmaps(ImgHandle, ImgMaskHandle, False);
       tmp_img.Free;
       B.Handle := ImgHandle;
@@ -581,7 +590,7 @@ end;
 procedure TMainForm.About2Click(Sender: TObject);
 begin
   Application.MessageBox(
-    'Author: Olexy Sviridenko aka Alex Slipknot (alexslipknot@europe.com)',
+    'Author: Oleksii Svyrydenko aka Alex Slipknot (alexslipknot@europe.com)',
     PChar('Screenur v ' + GetFileVersion), MB_ICONASTERISK);
 end;
 
@@ -631,6 +640,7 @@ begin
       Colour := ToolsImg.Picture.Bitmap.Canvas.Pixels[ColorImg.Left +
         3, ColorImg.Top + 6];
       Memo1.Font.Color := Colour;
+
       with ColorImg.Picture.Bitmap.Canvas do
       begin
         Pen.Style := psClear;
@@ -639,8 +649,10 @@ begin
         Ellipse(4, 4, 12, 12);
       end;
     end;
+
     if ColorImg.Left + X - color_x < 111 then
       ColorImg.Left := 111;
+
     if ColorImg.Left + X - color_x > 410 then
       ColorImg.Left := 410;
   end;
@@ -652,8 +664,10 @@ begin
   // prevent fast movement
   if ColorImg.Left < 111 then
     ColorImg.Left := 111;
+
   if ColorImg.Left > 410 then
     ColorImg.Left := 410;
+
   SaveSettings;
 end;
 
@@ -676,6 +690,7 @@ var
 begin
   overall := (Volume - 1) div 2;
   C := TCanvas.Create;
+
   if Original then
   begin
     B := TBitmap.Create;
@@ -709,6 +724,7 @@ begin
       ky := kx * deltay / deltax
     else
       kx := ky * deltax / deltay;
+
     lx := coordX;
     ly := coordY;
 
@@ -727,18 +743,17 @@ begin
     // fix for linux to prevent not clear text
     Polygon(Points);
 
-    // pain line for arrow
+    // paint line for arrow
     for i := -overall to (overall * 2 + 1) do
       for j := -overall to (overall * 2 + 1) do
       begin
-        //MoveTo(coordX, coordY);
-        //LineTo(X + i, Y + j);
-        DrawAntialisedLine(C, coordX, coordY, X + i, Y + j, Colour);
+        Line(coordX, coordY, X + i, Y + j);
       end;
   end;
 
   if Original then
   begin
+    DrawAntialisedLine(C, coordX, coordY, X + i, Y + j, Colour);
     History.Add(B);
     B.Free;
   end;
@@ -773,21 +788,19 @@ begin
 
   with C do
   begin
-    // pain line
+    // paint line
     Pen.color := Colour;
+
     for i := -overall to (overall * 2 + 1) do
       for j := -overall to (overall * 2 + 1) do
       begin
-        {MoveTo(coordX + i, coordY + j);
-        LineTo(X + i, Y + j);}
-        //Line(coordX + i, coordY + j, X + i, Y + j);
-        DrawAntialisedLine(C, coordX + i, coordY + j, X + i, Y + j, Colour);
+        Line(coordX + i, coordY + j, X + i, Y + j);
       end;
-
   end;
 
   if Original then
   begin
+    DrawAntialisedLine(C, coordX + i, coordY + j, X + i, Y + j, Colour);
     History.Add(B);
     B.Free;
   end;
@@ -856,6 +869,7 @@ begin
 
   ColorImgMouseMove(self, [ssLeft], 0, 0);
   MainForm.ShowInTaskBar := stNever;
+
   if Screen.MonitorCount > 1 then
   begin
     for i := 1 to Screen.MonitorCount - 1 do
@@ -896,26 +910,32 @@ begin
   begin
     ScissorsBtnClick(Self);
   end;
+
   if (ssCtrl in Shift) and (Key = $32) then
   begin
     PencilBtnClick(Self);
   end;
+
   if (ssCtrl in Shift) and (Key = $33) then
   begin
     LineBtnClick(Self);
   end;
+
   if (ssCtrl in Shift) and (Key = $34) then
   begin
     ArrowBtnClick(Self);
   end;
+
   if (ssCtrl in Shift) and (Key = $35) then
   begin
     TextBtnClick(Self);
   end;
+
   if (ssCtrl in Shift) and (Key = $36) then
   begin
     CircleBtnClick(Self);
   end;
+
   if (ssCtrl in Shift) and (Key = $37) then
   begin
     SquareBtnClick(Self);
@@ -926,6 +946,7 @@ begin
     GoForward;
     Exit;
   end;
+
   if (ssCtrl in Shift) and (Key = $5A) then
   begin
     Undo;
@@ -972,6 +993,7 @@ end;
 procedure TMainForm.FormShow(Sender: TObject);
 begin
   ShowWindow(Handle, SW_HIDE);
+
   if first_start then
   begin
     first_start := False;
@@ -1018,6 +1040,7 @@ var
 begin
   {$IFDEF WINDOWS}
   HotkeyTimer.Enabled := False;
+
   while GetMessage(message, 0, 0, 0) do
   begin
     if message.message = WM_HOTKEY then
@@ -1025,11 +1048,13 @@ begin
       MainForm.MakeScreenshot;
       sleep(10);
     end;
+
     if FMustClose then
     begin
       break;
       Close;
     end;
+
     TranslateMessage(message);
     DispatchMessage(message);
   end;
@@ -1165,6 +1190,7 @@ begin
           ToolsPnl.Top := FY - ToolsPnl.Height;
       end;
     end;
+
     Brush.Style := bsClear;
     Font.Color := clLime;
     Font.Size := 12;
@@ -1185,6 +1211,7 @@ begin
   with BmpPen.Canvas do
   begin
     Pen.color := Colour;
+
     for i := -overall to (overall * 2 + 1) do
       for j := -overall to (overall * 2 + 1) do
       begin
@@ -1211,6 +1238,7 @@ var
 begin
   overall := (Volume - 1) div 2;
   C := TCanvas.Create;
+
   if Original then
   begin
     B := TBitmap.Create;
@@ -1228,7 +1256,7 @@ begin
 
   with C do
   begin
-    // pain square
+    // paint square
     Pen.color := Colour;
     for i := -overall to (overall * 2 + 1) do
       for j := -overall to (overall * 2 + 1) do
@@ -1262,6 +1290,7 @@ var
 begin
   overall := (Volume - 1) div 2;
   C := TCanvas.Create;
+
   if Original then
   begin
     B := TBitmap.Create;
@@ -1279,9 +1308,10 @@ begin
 
   with C do
   begin
-    // pain circle
+    // paint circle
     Pen.color := Colour;
     Brush.Style := bsClear;
+
     for i := -overall to (overall * 2 + 1) do
       for j := -overall to (overall * 2 + 1) do
       begin
@@ -1318,6 +1348,7 @@ begin
       Brush.color := clWhite;
       FillRect(Scissors.SelectedRect);
     end;
+
     CopyRect(Scissors.CurrentRect, Scissors.FB.Canvas, Scissors.SelectedRect);
   end;
 end;
@@ -1347,6 +1378,7 @@ var
   C: TCanvas;
 begin
   C := TCanvas.Create;
+
   if Original then
   begin
     C.Handle := Scissors.FB.Canvas.Handle;
@@ -1359,7 +1391,7 @@ begin
 
   with C do
   begin
-    // pain square
+    // paint square
     Pen.color := clLime;
     Pen.Style := psDash;
     MoveTo(coordX, coordY);
@@ -1406,6 +1438,7 @@ begin
       Scissors.CurrentRect := Scissors.SelectedRect;
       Scissors.PrevRect := Scissors.SelectedRect;
     end;
+
     Pen.Style := psSolid;
   end;
 
@@ -1599,11 +1632,13 @@ begin
       SquarePaint(FX, FY);
     if Tools.Current = iCircle then
       CirclePaint(FX, FY);
+
     if (Tools.Current = iScissors) and (Scissors.Moving) then
     begin
       ScissorsMove(FX, FY, FShift);
       MainImage.Cursor := crDrag;
     end;
+
     if (Tools.Current = iScissors) and (not Scissors.Moving) then
     begin
       ScissorsPaint(FX, FY);
@@ -1621,6 +1656,7 @@ begin
     r.Top := Min(SelectedFrom.y, SelectedTo.y);
     r.Right := Max(SelectedFrom.x, SelectedTo.x);
     r.Bottom := Max(SelectedFrom.y, SelectedTo.y);
+
     if not PtInRect(r, Point(FX, FY)) then
     begin
       Tools.Current := iNone;
@@ -1818,8 +1854,10 @@ begin
   // prevent fast movement
   if VolumeImg.Left < 13 then
     VolumeImg.Left := 13;
+
   if VolumeImg.Left > 90 then
     VolumeImg.Left := 90;
+
   Volume := (VolumeImg.Left - 3) div 8;
   SaveSettings;
 end;
@@ -1860,6 +1898,7 @@ begin
       Points[i - 1] := Points[i];
     SetLength(Points, length(Points) - 1);
   end;
+
   SetLength(Points, length(Points) + 1);
   Points[length(Points) - 1] := TBitmap.Create;
   Points[length(Points) - 1].PixelFormat := pf24bit;
@@ -1868,6 +1907,7 @@ begin
 
   if (length(Points) > 1) then
     CanBack := True;
+
   OnChange;
 end;
 
@@ -1909,6 +1949,7 @@ begin
   begin
     Current := Current + 1;
   end;
+
   Result := TBitmap.Create;
   Result.Assign(GetCurrent);
   OnChange;
@@ -1926,6 +1967,7 @@ var
 begin
   for i := 0 to Length(Points) - 1 do
     FreeAndNil(Points[i]);
+
   SetLength(Points, 0);
 end;
 
@@ -1941,6 +1983,7 @@ begin
 
   if Current > 1 then
     CanBack := True;
+
   if Current < length(Points) - 1 then
     CanForward := True;
 end;
@@ -2025,6 +2068,7 @@ begin
       jObject := jObject.Get('data', jObject);
       Link := jObject.Get('link');
       ModalForm.Edit1.Text := Link;
+
       if (Settings.use_clipboard) and (Settings.link_to_clipboard) then
         Clipboard.SetTextBuf(PChar(Link));
     end;
@@ -2044,6 +2088,7 @@ end;
 procedure TUploadThread.Execute;
 begin
   UploadProcess;
+
   if Link <> '' then
     Synchronize(@MyModal);
 end;
@@ -2062,6 +2107,7 @@ begin
   begin
     Exit;
   end;
+
   HistoryForm.HistoryList.InsertRowWithValues(1,
     [FormatDateTime('yyyy-mm-dd hh:nn:ss', now), Link]);
 
@@ -2081,6 +2127,7 @@ begin
   end;
 
   ModalForm.AlphaBlendValue := 255;
+
   if Settings.autohide then
     MainForm.HideTimer.Enabled := True;
 end;

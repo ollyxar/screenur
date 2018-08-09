@@ -12,7 +12,7 @@ object MainForm: TMainForm
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  LCLVersion = '1.8.2.0'
+  LCLVersion = '1.8.4.0'
   Visible = True
   object ToolsPnl: TPanel
     Left = 32
@@ -6121,7 +6121,7 @@ object MainForm: TMainForm
     object FontSizeEdit: TSpinEdit
       Cursor = crHandPoint
       Left = 40
-      Height = 23
+      Height = 27
       Top = 12
       Width = 96
       MaxValue = 40
@@ -7406,8 +7406,8 @@ object MainForm: TMainForm
     MaxLineAction = maException
     Port = 0
     DefaultPort = 0
-    SSLOptions.Method = sslvTLSv1_2
-    SSLOptions.SSLVersions = [sslvTLSv1_2]
+    SSLOptions.Method = sslvSSLv23
+    SSLOptions.SSLVersions = [sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2]
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0

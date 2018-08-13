@@ -310,7 +310,8 @@ begin
     swap(y1, y2);
   end;
 
-  if dx = 0 then dx := 0.000000001;
+  if dx = 0 then
+    dx := 0.000000001;
 
   gradient := dy / dx;
   xend := round(x1);
@@ -489,8 +490,8 @@ begin
     Font.color := Colour;
     Font.Size := FontSizeEdit.Value;
     for i := 0 to Memo1.Lines.Count - 1 do
-      TextOut(TextPnl.Left + Memo1.Left + TextWidth('s'), TextPnl.Top + Memo1.Top + 2 + i *
-        (trunc(FontSizeEdit.Value * 1.8)), Memo1.Lines[i]);
+      TextOut(TextPnl.Left + Memo1.Left + TextWidth('s'), TextPnl.Top +
+        Memo1.Top + 2 + i * (trunc(FontSizeEdit.Value * 1.8)), Memo1.Lines[i]);
   end;
 
   History.Add(B);
@@ -744,16 +745,22 @@ begin
     Polygon(Points);
 
     // paint line for arrow
-    for i := -overall to (overall * 2 + 1) do
-      for j := -overall to (overall * 2 + 1) do
-      begin
-        Line(coordX, coordY, X + i, Y + j);
-      end;
+    if not Original then
+      for i := -overall to (overall * 2 + 1) do
+        for j := -overall to (overall * 2 + 1) do
+          Line(coordX, coordY, X + i, Y + j);
   end;
 
   if Original then
   begin
-    DrawAntialisedLine(C, coordX, coordY, X + i, Y + j, Colour);
+    for i := -overall + 1 to (overall * 2) do
+      for j := -overall + 1 to (overall * 2) do
+        C.Line(coordX, coordY, X + i, Y + j);
+
+    DrawAntialisedLine(C, coordX, coordY, X - overall, Y - overall, Colour);
+    DrawAntialisedLine(C, coordX, coordY, X + (overall * 2 + 1), Y +
+      (overall * 2 + 1), Colour);
+
     History.Add(B);
     B.Free;
   end;
@@ -791,16 +798,22 @@ begin
     // paint line
     Pen.color := Colour;
 
-    for i := -overall to (overall * 2 + 1) do
-      for j := -overall to (overall * 2 + 1) do
-      begin
-        Line(coordX + i, coordY + j, X + i, Y + j);
-      end;
+    if not Original then
+      for i := -overall to (overall * 2 + 1) do
+        for j := -overall to (overall * 2 + 1) do
+          Line(coordX + i, coordY + j, X + i, Y + j);
   end;
 
   if Original then
   begin
-    DrawAntialisedLine(C, coordX + i, coordY + j, X + i, Y + j, Colour);
+    for i := -overall + 1 to (overall * 2) do
+      for j := -overall + 1 to (overall * 2) do
+        C.Line(coordX + i, coordY + j, X + i, Y + j);
+
+    DrawAntialisedLine(C, coordX, coordY, X - overall, Y - overall, Colour);
+    DrawAntialisedLine(C, coordX, coordY, X + (overall * 2 + 1), Y +
+      (overall * 2 + 1), Colour);
+
     History.Add(B);
     B.Free;
   end;

@@ -5,7 +5,7 @@ interface
 uses
   SysUtils, Variants, Classes, Graphics, Controls, Forms, Dialogs, StdCtrls,
   IniFiles, FileCtrl, Buttons, LCLType, LCLIntf {$IFDEF WINDOWS}, Registry,
-  Windows, Messages{$ENDIF};
+  Windows, Messages{$ENDIF}{$IFDEF UNIX}, Hotkey{$ENDIF};
 
 type
 
@@ -67,12 +67,18 @@ procedure LoadSettings;
 procedure SaveSettings;
 function StringToKey(s: string): word;
 function KeyToString(k: word): string;
+{$IFDEF UNIX}
+procedure ScreenshotCallback;
+{$ENDIF}
 
 var
   SettingsForm: TSettingsForm;
   Settings: TSettings;
   {$IFDEF WINDOWS}
   keyid: ATOM;
+  {$ENDIF}
+  {$IFDEF UNIX}
+  hot: THotkeyThread;
   {$ENDIF}
 
 implementation
@@ -160,6 +166,14 @@ begin
     Result := 'F12';
 end;
 
+{$IFDEF UNIX}
+procedure ScreenshotCallback;
+begin
+  MainForm.MakeScreenshot();
+end;
+
+{$ENDIF}
+
 procedure TSettingsForm.ClipboardBoxClick(Sender: TObject);
 begin
   if ClipboardBox.Checked then
@@ -179,16 +193,7 @@ begin
   LoadSettings;
   ShowSettings;
   {$IFDEF UNIX}
-  with SettingsForm do
-  begin
-    PrntScrRadio.Checked := False;
-    PrntScrRadio.Enabled := False;
-    CustomRadio.Checked := False;
-    CustomRadio.Enabled := False;
-    ModPrint.Enabled := False;
-    KeyPrint.Enabled := False;
-    StartupBox.Enabled := False;
-  end;
+  SettingsForm.StartupBox.Enabled := False;
   {$ENDIF}
 end;
 
@@ -213,6 +218,7 @@ begin
   ClipboardBox.Checked := Settings.use_clipboard;
   StartupBox.Checked := Settings.use_startup;
   AutohideBox.Checked := Settings.autohide;
+
   if ClipboardBox.Checked then
   begin
     LinkToClipRadio.Enabled := True;
@@ -223,8 +229,10 @@ begin
     LinkToClipRadio.Enabled := False;
     ImageToClipRadio.Enabled := False;
   end;
+
   LinkToClipRadio.Checked := Settings.link_to_clipboard;
   ImageToClipRadio.Checked := not LinkToClipRadio.Checked;
+
   case Settings.prnt_mode of
     0:
       ModPrint.ItemIndex := -1;
@@ -235,6 +243,7 @@ begin
     4:
       ModPrint.ItemIndex := 2
   end;
+
   KeyPrint.Text := KeyToString(Settings.prnt_key);
   UploadShift.ItemIndex := integer(Settings.upload_btn1);
   UploadKey.Text := KeyToString(Settings.upload_btn2);
@@ -251,9 +260,12 @@ begin
 end;
 
 procedure LoadSettings;
-{$IFDEF WINDOWS}
 var
+{$IFDEF WINDOWS}
   reg: TRegistry;
+{$ENDIF}
+{$IFDEF UNIX}
+  m: TModifier;
 {$ENDIF}
 begin
   with Settings do
@@ -293,16 +305,38 @@ begin
     MainForm.ColorImg.Left := ini.ReadInteger('Tools', 'color_x', 209);
   end;
 
-  {$IFDEF WINDOWS}
   if Settings.use_prntscr then
   begin
+    {$IFDEF WINDOWS}
     keyid := GlobalAddAtom('Screenur hotkey');
     RegisterHotKey(MainForm.handle, keyid, 0, VK_SNAPSHOT);
+    {$ENDIF}
+    {$IFDEF UNIX}
+    hot := THotkeyThread.Create(@ScreenshotCallback, 'Print', NoModifier, True);
+    {$ENDIF}
   end
   else
   begin
+    {$IFDEF WINDOWS}
     RegisterHotKey(MainForm.Handle, keyid, Settings.prnt_mode, Settings.prnt_key);
+    {$ENDIF}
+    {$IFDEF UNIX}
+    case Settings.prnt_mode of
+      0: m := NoModifier;
+      1: m := KeyAlt;
+      2: m := KeyControl;
+      3: m := KeyShift;
+      else
+        m := NoModifier;
+    end;
+
+    hot := THotkeyThread.Create(@ScreenshotCallback,
+      PChar(KeyToString(Settings.prnt_key)), m, True);
+    {$ENDIF}
   end;
+  {$IFDEF UNIX}
+  if Assigned(SettingsForm) then
+    hot.Start;
   {$ENDIF}
 end;
 
@@ -326,6 +360,10 @@ begin
     reg.CloseKey;
     reg.Free;
     {$ENDIF}
+    {$IFDEF UNIX}
+    hot.Terminate;
+    hot.Free;
+    {$ENDIF}
 
     ini.WriteBool('Hook', 'PRNTSCR', PrntScrRadio.Checked);
     case ModPrint.ItemIndex of
@@ -348,7 +386,7 @@ begin
     ini.WriteBool('Result', 'autohide', AutohideBox.Checked);
     ini.WriteInteger('Tools', 'color_x', MainForm.ColorImg.Left);
     ini.WriteInteger('Tools', 'volume', Volume);
-    ini.WriteInteger('Tools', 'prev', Integer(Tools.Prev));
+    ini.WriteInteger('Tools', 'prev', integer(Tools.Prev));
   end;
   LoadSettings;
 end;

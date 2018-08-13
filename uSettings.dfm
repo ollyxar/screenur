@@ -2,11 +2,11 @@ object SettingsForm: TSettingsForm
   Left = 339
   Height = 257
   Top = 228
-  Width = 656
+  Width = 711
   BorderStyle = bsDialog
   Caption = 'Settings'
   ClientHeight = 257
-  ClientWidth = 656
+  ClientWidth = 711
   Color = clBtnFace
   Font.Color = clWindowText
   Font.Height = -11
@@ -14,29 +14,29 @@ object SettingsForm: TSettingsForm
   OnCreate = FormCreate
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '1.6.0.4'
+  LCLVersion = '1.8.4.0'
   object GroupBox1: TGroupBox
     Left = 8
     Height = 88
     Top = 8
-    Width = 317
+    Width = 328
     Caption = 'Capture screen'
-    ClientHeight = 70
-    ClientWidth = 313
+    ClientHeight = 72
+    ClientWidth = 324
     TabOrder = 0
     object Label1: TLabel
       Left = 243
-      Height = 13
+      Height = 14
       Top = 35
-      Width = 8
+      Width = 9
       Caption = '+'
       ParentColor = False
     end
     object PrntScrRadio: TRadioButton
       Left = 16
-      Height = 19
+      Height = 24
       Top = 11
-      Width = 138
+      Width = 165
       Caption = 'Snapshot on PrintScreen'
       Checked = True
       TabOrder = 0
@@ -44,31 +44,31 @@ object SettingsForm: TSettingsForm
     end
     object CustomRadio: TRadioButton
       Left = 16
-      Height = 19
+      Height = 24
       Top = 34
-      Width = 150
+      Width = 178
       Caption = 'Custom snapshot shortcut:'
       TabOrder = 1
     end
     object ModPrint: TComboBox
-      Left = 172
-      Height = 22
+      Left = 200
+      Height = 27
       Top = 31
       Width = 65
-      ItemHeight = 16
+      ItemHeight = 0
       ItemIndex = 0
       Items.Strings = (
         'ALT'
         'CTRL'
         'SHIFT'
       )
-      Style = csOwnerDrawFixed
+      Style = csDropDownList
       TabOrder = 2
       Text = 'ALT'
     end
     object KeyPrint: TEdit
-      Left = 257
-      Height = 21
+      Left = 272
+      Height = 24
       Top = 32
       Width = 38
       CharCase = ecUppercase
@@ -78,9 +78,9 @@ object SettingsForm: TSettingsForm
     end
   end
   object SaveBtn: TButton
-    Left = 573
+    Left = 626
     Height = 25
-    Top = 224
+    Top = 216
     Width = 75
     Caption = 'Ok'
     OnClick = SaveBtnClick
@@ -90,21 +90,21 @@ object SettingsForm: TSettingsForm
     Left = 8
     Height = 110
     Top = 102
-    Width = 317
+    Width = 328
     Caption = 'Pictures'
-    ClientHeight = 92
-    ClientWidth = 313
+    ClientHeight = 94
+    ClientWidth = 324
     TabOrder = 2
     object Label2: TLabel
-      Left = 243
-      Height = 13
-      Top = 19
-      Width = 8
+      Left = 240
+      Height = 14
+      Top = 24
+      Width = 9
       Caption = '+'
       ParentColor = False
     end
     object SpeedButton1: TSpeedButton
-      Left = 272
+      Left = 287
       Height = 21
       Top = 55
       Width = 23
@@ -141,30 +141,30 @@ object SettingsForm: TSettingsForm
     end
     object UploadBox: TCheckBox
       Left = 16
-      Height = 19
+      Height = 24
       Top = 9
-      Width = 84
+      Width = 104
       Caption = 'Upload image'
       Checked = True
       State = cbChecked
       TabOrder = 0
     end
     object UploadKey: TEdit
-      Left = 257
-      Height = 21
-      Top = 16
-      Width = 38
+      Left = 258
+      Height = 24
+      Top = 19
+      Width = 52
       CharCase = ecUppercase
       MaxLength = 10
       TabOrder = 1
       Text = 'ENTER'
     end
     object UploadShift: TComboBox
-      Left = 172
-      Height = 22
+      Left = 168
+      Height = 31
       Top = 16
       Width = 65
-      ItemHeight = 16
+      ItemHeight = 0
       ItemIndex = 0
       Items.Strings = (
         '------'
@@ -172,41 +172,41 @@ object SettingsForm: TSettingsForm
         'CTRL'
         'SHIFT'
       )
-      Style = csOwnerDrawFixed
+      Style = csDropDownList
       TabOrder = 2
       Text = '------'
     end
     object SaveBox: TCheckBox
       Left = 16
-      Height = 19
+      Height = 24
       Top = 32
-      Width = 75
+      Width = 93
       Caption = 'Save image'
       TabOrder = 3
     end
     object ImagesDir: TEdit
       Left = 16
-      Height = 21
+      Height = 24
       Top = 55
-      Width = 257
+      Width = 256
       TabOrder = 4
       Text = 'ImagesDir'
     end
   end
   object GroupBox3: TGroupBox
-    Left = 331
+    Left = 344
     Height = 110
     Top = 102
-    Width = 317
+    Width = 357
     Caption = 'Result'
-    ClientHeight = 92
-    ClientWidth = 313
+    ClientHeight = 94
+    ClientWidth = 353
     TabOrder = 3
     object ClipboardBox: TCheckBox
       Left = 16
-      Height = 19
+      Height = 24
       Top = 9
-      Width = 134
+      Width = 188
       Caption = 'Copy result to clipboard'
       Checked = True
       OnClick = ClipboardBoxClick
@@ -215,9 +215,9 @@ object SettingsForm: TSettingsForm
     end
     object LinkToClipRadio: TRadioButton
       Left = 16
-      Height = 19
+      Height = 24
       Top = 32
-      Width = 122
+      Width = 173
       Caption = 'Copy link to clipboard'
       Checked = True
       TabOrder = 1
@@ -225,35 +225,35 @@ object SettingsForm: TSettingsForm
     end
     object ImageToClipRadio: TRadioButton
       Left = 159
-      Height = 19
+      Height = 24
       Top = 32
-      Width = 135
+      Width = 190
       Caption = 'Copy image to clipboard'
       TabOrder = 2
     end
     object AutohideBox: TCheckBox
       Left = 16
-      Height = 19
+      Height = 24
       Top = 57
-      Width = 176
+      Width = 249
       Caption = 'Automatically hide result window'
       TabOrder = 3
     end
   end
   object GroupBox4: TGroupBox
-    Left = 331
+    Left = 344
     Height = 88
     Top = 8
-    Width = 317
+    Width = 357
     Caption = 'Startup'
-    ClientHeight = 70
-    ClientWidth = 313
+    ClientHeight = 72
+    ClientWidth = 353
     TabOrder = 4
     object StartupBox: TCheckBox
       Left = 16
-      Height = 19
+      Height = 24
       Top = 24
-      Width = 144
+      Width = 197
       Caption = 'Launch on system startup'
       TabOrder = 0
     end
